@@ -1,16 +1,40 @@
+import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import Counter from '../components/Counter'
-import * as CounterActions from '../actions/counter'
+import Header from '../components/Header'
+import MainSection from '../components/MainSection' 
+import * as TodosActions from '../actions/todos'
+
+class App extends Component {
+	render() {
+		const { todos, actions } = this.props
+		return (
+			<div>
+				<Header addTodo={actions.addTodo} />
+				<MainSection todos={todos} actions={actions} />
+			</div>
+		)
+	}
+}
+
+App.propTypes = {
+	todos: PropTypes.array.isRequired,
+	actions: PropTypes.object.isRequired
+}
 
 function mapStateToProps(state) {
 	return {
-		counter: state.counter
+		todos: state.todos
 	}
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators(CounterActions, dispatch)
+	return {
+		actions: bindActionCreators(TodosActions, dispatch)
+	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Counter)
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(App)
