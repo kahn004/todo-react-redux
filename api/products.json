@@ -1,0 +1,26 @@
+[
+	{
+		"id": 1,
+		"title": "Hombre button-up flannel",
+		"price": 114,
+		"inventory": 1
+	},
+	{
+		"id": 2,
+		"title": "Town button-up flannel",
+		"price": 109,
+		"inventory": 3
+	},
+	{
+		"id": 3,
+		"title": "Mark button-up woven",
+		"price": 84,
+		"inventory": 5
+	},
+	{
+		"id": 4,
+		"title": "Hysteric button-up woven",
+		"price": 72,
+		"inventory": 7
+	}
+]

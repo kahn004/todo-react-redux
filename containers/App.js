@@ -1,40 +1,17 @@
-import React, { Component, PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import Header from '../components/Header'
-import MainSection from '../components/MainSection' 
-import * as TodosActions from '../actions/todos'
+import React, { Component } from 'react'
+import ProductsContainer from './ProductsContainer'
+import CartContainer from './CartContainer'
 
-class App extends Component {
+export default class App extends Component {
 	render() {
-		const { todos, actions } = this.props
 		return (
 			<div>
-				<Header addTodo={actions.addTodo} />
-				<MainSection todos={todos} actions={actions} />
+				<h2>Shopping Cart Example</h2>
+				<hr/>
+				<ProductsContainer />
+				<hr/>
+				<CartContainer />
 			</div>
 		)
 	}
 }
-
-App.propTypes = {
-	todos: PropTypes.array.isRequired,
-	actions: PropTypes.object.isRequired
-}
-
-function mapStateToProps(state) {
-	return {
-		todos: state.todos
-	}
-}
-
-function mapDispatchToProps(dispatch) {
-	return {
-		actions: bindActionCreators(TodosActions, dispatch)
-	}
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(App)
