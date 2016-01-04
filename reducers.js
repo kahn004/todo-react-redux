@@ -1,25 +1,31 @@
 import { combineReducers } from 'redux'
-import { ADD_TODO } from './actions'
+import { ADD_TODO, COMPLETE_TODO } from './actions'
 
-const initialState = {
-	todos: [
-		{
-			text: 'first!'
-		}
-	]
+function todo (state, action) {
+	if (state.id !== action.id) {
+		return state
+	}
+	return {
+		...state,
+		completed: true
+	}
 }
 
-function todos (state = initialState, action) {
+function todos (state = [], action) {
 	switch (action.type) {
 		case ADD_TODO:
-			return Object.assign({}, state, {
-				todos: [
-					...state.todos,
-					{
-						text: action.text
-					}
-				]
-			})
+			return [
+				...state,
+				{
+					id: action.id,
+					text: action.text,
+					completed: false
+				}
+			]
+		case COMPLETE_TODO:
+			return state.map(t =>
+				todo(t, action)
+			)
 		default:
 			return state
 	}
