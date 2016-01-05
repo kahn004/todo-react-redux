@@ -1,121 +1,118 @@
-import React, { Component, PropTypes } from 'react'
-import { render } from 'react-dom'
-import { createStore, compose, combineReducers } from 'redux'
+import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
+import { createStore, compose, combineReducers } from 'redux';
 
 import {
-	ReduxRouter,
-	routerStateReducer,
-	reduxReactRouter,
-	pushState
-} from 'redux-router'
+  ReduxRouter,
+  routerStateReducer,
+  reduxReactRouter,
+  pushState,
+} from 'redux-router';
 
-import { Route, Link } from 'react-router'
-import { Provider, connect } from 'react-redux'
-import { createHistory } from 'history'
-//import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react'
+import { Route, Link } from 'react-router';
+import { Provider, connect } from 'react-redux';
+// import { devTools } from 'redux-devtools';
+// import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
+import { createHistory } from 'history';
 
-//@connect((state) => ({}))
+@connect((state) => ({}))
 class App extends Component {
-	constructor (props) {
-		super(props)
-		this.handleClick = this.handleClick.bind(this)
-	}
+  static propTypes = {
+    children: PropTypes.node
+  }
 
-	handleClick (event) {
-		event.preventDefault()
-		const { dispatch } = this.props
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-		//dispatch(pushState(null, '/parent/child/custom'))
-	}
+  handleClick(event) {
+    event.preventDefault();
+    const { dispatch } = this.props;
 
-	render () {
-		const links = [
-			'/',
-			'/parent?foo=bar',
-			'/parent/child?bar=baz',
-			'/parent/child/123?bar=foo'
-		].map((l, i) =>
-			<p
-				key={i}>
-				<Link to={l}>{l}</Link>
-			</p>
-		)
+    dispatch(pushState(null, '/parent/child/custom'));
+  }
 
-		return (
-			<div>
-				<h1>App Container</h1>
-				{ links }
+  render() {
+    const links = [
+      '/',
+      '/parent?foo=bar',
+      '/parent/child?bar=baz',
+      '/parent/child/123?baz=foo'
+    ].map((l, i) =>
+      <p key={i}>
+        <Link to={l}>{l}</Link>
+      </p>
+    );
 
-				<a href="#" onClick={this.handleClick}>
-					/parent/child/custom
-				</a>
-				{ this.props.children }
-			</div>
-		)
-	}
+    return (
+      <div>
+        <h1>App Container</h1>
+        {links}
+
+        <a href="#" onClick={this.handleClick}>
+          /parent/child/custom
+        </a>
+        {this.props.children}
+      </div>
+    );
+  }
 }
 
 class Parent extends Component {
-	render () {
-		return (
-			<div>
-				<h2>Parent</h2>
-				{ this.props.children }
-			</div>
-		)
-	}
+  static propTypes = {
+    children: PropTypes.node
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>Parent</h2>
+        {this.props.children}
+      </div>
+    );
+  }
 }
 
 class Child extends Component {
-	render () {
-		const { params: { id } } = this.props
-		return (
-			<div>
-				<h2>Child</h2>
-				{ id && <p>{ id }</p> }
-			</div>
-		)
-	}
+  render() {
+    const { params: { id }} = this.props;
+
+    return (
+      <div>
+        <h2>Child</h2>
+        {id && <p>{id}</p>}
+      </div>
+    );
+  }
 }
 
 const reducer = combineReducers({
-	router: routerStateReducer
-})
+  router: routerStateReducer
+});
 
 const store = compose(
-	reduxReactRouter({ createHistory })
-)(createStore)(reducer)
+  reduxReactRouter({ createHistory }),
+  // devTools()
+)(createStore)(reducer);
 
 class Root extends Component {
-	render () {
-		return (
-			<div>
-				<Provider store={store}>
-					<ReduxRouter>
-						<Route path="/" component={App}>
-							<Route path="parent" component={Parent}>
-								<Route path="child" component={Child} />
-								<Route path="child/:id" component={Child} />
-							</Route>
-						</Route>
-					</ReduxRouter>
-				</Provider>
-			</div>
-		)
-	}
+  render() {
+    return (
+      <div>
+        <Provider store={store}>
+          <ReduxRouter>
+            <Route path="/" component={App}>
+              <Route path="parent" component={Parent}>
+                <Route path="child" component={Child} />
+                <Route path="child/:id" component={Child} />
+              </Route>
+            </Route>
+          </ReduxRouter>
+        </Provider>
+      </div>
+    );
+  }
 }
 
-App.propTypes = {
-	children: PropTypes.node
-}
-
-Parent.propTypes = {
-	children: PropTypes.node
-}
-
-export default connect()(App)
-
-render(
-	<Root />,
-	document.getElementById('root')
-)
+ReactDOM.render(<Root />, document.getElementById('root'));
